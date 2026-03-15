@@ -16,13 +16,13 @@ extern Adafruit_SSD1306 display;
 extern Adafruit_MPR121 touchSensorRH;
 extern Adafruit_MPR121 touchSensorLH;
 extern Adafruit_MPR121 touchSensorRollers;
-#else
+#endif
 #if defined(NUEVI_R2)
 extern Adafruit_MPR121 touchSensorRollers;
 extern Adafruit_MPR121 touchSensorRH;
-#else
-extern Adafruit_MPR121 touchSensor;
 #endif
+#if defined(NUEVI_R1)
+extern Adafruit_MPR121 touchSensor;
 #endif
 extern byte cursorNow;
 #if defined(NURAD)
@@ -171,11 +171,13 @@ void autoCalSelected() {
     calRead = map(constrain(touchSensorRollers.filteredData(extraPin), ctouchLoLimit, ctouchHiLimit), ctouchLoLimit, ctouchHiLimit, extracHiLimit, extracLoLimit);
     calReadNext = map(constrain(touchSensorRollers.filteredData(extraPin2), ctouchLoLimit, ctouchHiLimit), ctouchLoLimit, ctouchHiLimit, extracHiLimit, extracLoLimit);
     if (calReadNext > calRead) calRead = calReadNext; //use highest value
-#elif defined(NUEVI_R2)
+#endif
+#if defined(NUEVI_R2)
     calRead = map(constrain(touchSensorRollers.filteredData(extraPin), ctouchLoLimit, ctouchHiLimit), ctouchLoLimit, ctouchHiLimit, extracHiLimit, extracLoLimit);
     calReadNext = map(constrain(touchSensorRollers.filteredData(extraPin2), ctouchLoLimit, ctouchHiLimit), ctouchLoLimit, ctouchHiLimit, extracHiLimit, extracLoLimit);
     if (calReadNext > calRead) calRead = calReadNext; //use highest value
-#else
+#endif
+#if defined(PLATFORM_R1)
     calRead = touchRead(extraPin);
 #endif
     extracThrVal = constrain(calRead+200, extracLoLimit, extracHiLimit);
@@ -250,7 +252,8 @@ void autoCalSelected() {
     touch_Thr = map(ctouchThrVal,ctouchHiLimit,ctouchLoLimit,ttouchLoLimit,ttouchHiLimit);
     writeSetting(CTOUCH_THR_ADDR, ctouchThrVal);
   }
-#elif defined(NUEVI_R2)
+#endif
+#if defined(NUEVI_R2)
   // Bite sensor
   if(adjustOption == 1) {
     // Pressure sensor
@@ -262,7 +265,7 @@ void autoCalSelected() {
   }
   // Touch sensors
   if(adjustOption == 4) {
-    calRead = ctouchHiLimit;  
+    calRead = ctouchHiLimit;
     for (byte i = 6; i < 12; i++) {
       calReadNext = touchSensorRollers.filteredData(i) * (300-calOffsetRollers[i])/300;
       if (calReadNext < calRead) calRead = calReadNext; //use lowest value
@@ -275,16 +278,13 @@ void autoCalSelected() {
     touch_Thr = map(ctouchThrVal,ctouchHiLimit,ctouchLoLimit,ttouchLoLimit,ttouchHiLimit);
     writeSetting(CTOUCH_THR_ADDR, ctouchThrVal);
   }
-#else // NuEVI sensor calibration
+#endif
+#if defined(NUEVI_R1) // NuEVI R1 sensor calibration
   // Bite sensor
   if(adjustOption == 1) {
     if (digitalRead(biteJumperPin)){ //PBITE (if pulled low with jumper, pressure sensor is used instead of capacitive bite sensing)
       // Capacitive sensor
-      #if defined(NUEVI_R2)
-      //not done support for MPR121 bite pin yet
-      #else
       calRead = touchRead(bitePin);
-      #endif
       portamThrVal = constrain(calRead+200, portamLoLimit, portamHiLimit);
       portamMaxVal = constrain(portamThrVal+600, portamLoLimit, portamHiLimit);
       writeSetting(PORTAM_THR_ADDR, portamThrVal);
@@ -300,7 +300,7 @@ void autoCalSelected() {
   }
   // Touch sensors
   if(adjustOption == 4) {
-    calRead = ctouchHiLimit;  
+    calRead = ctouchHiLimit;
     for (byte i = 0; i < 12; i++) {
       calReadNext = touchSensor.filteredData(i);
       if (calReadNext < calRead) calRead = calReadNext; //use lowest value
@@ -479,7 +479,8 @@ void plotSensorPixels(){
     }
     redraw = 1;
   }
-  #elif defined(NUEVI_R2)
+  #endif
+  #if defined(NUEVI_R2)
     else if(adjustOption == 4) {
         display.drawLine(28,37,118,37,BLACK);
     for (byte i=0; i<12; i++){
@@ -495,7 +496,8 @@ void plotSensorPixels(){
     }
     redraw = 1;
   }
-  #else //NuEVI
+  #endif
+  #if defined(NUEVI_R1)
   else if(adjustOption == 4) {
     display.drawLine(28,39,118,39,BLACK);
     for (byte i=0; i<12; i++){

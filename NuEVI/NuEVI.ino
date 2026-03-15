@@ -612,13 +612,13 @@ byte slurSostenuto = 0;
 Adafruit_MPR121 touchSensorRollers = Adafruit_MPR121();
 Adafruit_MPR121 touchSensorRH = Adafruit_MPR121();
 Adafruit_MPR121 touchSensorLH = Adafruit_MPR121();
-#else
+#endif
 #if defined(NUEVI_R2)
 Adafruit_MPR121 touchSensorRollers = Adafruit_MPR121(); // roller and touch sensors on R2
 Adafruit_MPR121 touchSensorRH = Adafruit_MPR121(); // key board sensors on R2
-#else
-Adafruit_MPR121 touchSensor = Adafruit_MPR121(); // This is the 12-input touch sensor
 #endif
+#if defined(NUEVI_R1)
+Adafruit_MPR121 touchSensor = Adafruit_MPR121(); // This is the 12-input touch sensor
 #endif
 FilterOnePole breathFilter;
 FilterOnePole piezoFilter;
@@ -632,7 +632,6 @@ bool configManagementMode = false;
 
 //Update CV output pin, run from timer.
 void cvUpdate(){
-  #if defined(NURAD)
   #if defined(NURAD_R1)
   int cvPressure = analogRead(breathSensorPin);
   analogWrite(pwmDacPin,map(constrain(cvPressure,breathThrVal,breathMaxVal),breathThrVal,breathMaxVal,0,4095));
@@ -640,7 +639,6 @@ void cvUpdate(){
     analogWrite(dacPin,map(constrain(cvPressure,breathThrVal,4095),breathThrVal,4095,0,4095));
   }
   #endif
-  #else //NuEVI
   #if defined(NUEVI_R1)
   int cvPressure = analogRead(breathSensorPin);
   if(dacMode == DAC_MODE_PITCH){
@@ -648,7 +646,6 @@ void cvUpdate(){
   } else { //DAC_MODE_BREATH
     analogWrite(dacPin,map(constrain(cvPressure,breathThrVal,4095),breathThrVal,4095,0,4095));
   }
-  #endif
   #endif
 }
 
@@ -762,7 +759,8 @@ void setup() {
   delay(100);
   digitalWrite(statusLedPin,LOW);
 
-  #elif defined(NUEVI_R2)
+  #endif
+  #if defined(NUEVI_R2)
    if (!touchSensorRollers.begin(0x5A)) {
     while (1){  // Touch sensor initialization failed - stop doing stuff
       if (!digitalRead(dPin) && !digitalRead(ePin) && !digitalRead(uPin) && !digitalRead(mPin)) _reboot_Teensyduino_(); // reboot to program mode if all buttons pressed
@@ -773,13 +771,14 @@ void setup() {
       if (!digitalRead(dPin) && !digitalRead(ePin) && !digitalRead(uPin) && !digitalRead(mPin)) _reboot_Teensyduino_(); // reboot to program mode if all buttons pressed
     }
   }
-  #else
+  #endif
+  #if defined(NUEVI_R1)
   if (!touchSensor.begin(0x5A)) {
     while (1){  // Touch sensor initialization failed - stop doing stuff
       if (!digitalRead(dPin) && !digitalRead(ePin) && !digitalRead(uPin) && !digitalRead(mPin)) _reboot_Teensyduino_(); // reboot to program mode if all buttons pressed
     }
   }
-  
+
   #endif
 
 
@@ -810,7 +809,8 @@ void setup() {
     statusLed(i&1);
     delay(fastBoot?75:220); //Shorter delay for fastboot
   }
-#elif defined(NUEVI_R2)
+#endif
+#if defined(NUEVI_R2)
   vibZero = vibZeroBite = breathCalZero = 0;
   const int sampleCount = 4;
   for(int i = 1 ; i <= sampleCount; ++i) {
@@ -820,7 +820,8 @@ void setup() {
     statusLed(i&1);
     delay(fastBoot?75:220); //Shorter delay for fastboot
   }
-#else
+#endif
+#if defined(PLATFORM_R1)
   vibZero = vibZeroBite = breathCalZero = 0;
   const int sampleCount = 4;
   for(int i = 1 ; i <= sampleCount; ++i) {
@@ -921,10 +922,12 @@ void loop() {
       #if defined(NURAD_R2)
       bool patchKeyEVI = 0;
       bool lockGlideKey = 0;
-      #elif defined(NUEVI_R2)
+      #endif
+      #if defined(NUEVI_R2)
       bool patchKeyEVI = patchKey;
       bool lockGlideKey = 0;
-      #else
+      #endif
+      #if defined(PLATFORM_R1)
       bool patchKeyEVI = touchRead(patchPinEVI) > patchKeyThrEVI;
       bool lockGlideKey = touchRead(lockGlidePin) > lockGlideKeyThr;
       #endif

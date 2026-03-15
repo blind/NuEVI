@@ -1582,7 +1582,7 @@ const MenuEntrySub leverCCMenu = {
 const MenuEntrySub stripCtlMenu = {
 #if defined(NUEVI_R2)
   MenuType::ESub, "AUX CTL", "AUX DEST", &stripControl, 0, 2, MenuEntryFlags::EMenuEntryWrap,
-#else
+#elif defined(NURAD_R2)
   MenuType::ESub, "STRIP CTL", "STRIP DEST", &stripControl, 0, 2, MenuEntryFlags::EMenuEntryWrap,
 #endif
   [](SubMenuRef __unused,char* out, const char ** __unused unit) {
@@ -1596,7 +1596,7 @@ const MenuEntrySub stripCtlMenu = {
 const MenuEntrySub stripCCMenu = {
 #if defined(NUEVI_R2)
     MenuType::ESub, "AUX CC",  "CC NUMBER", &stripCC, 0, 127, MenuEntryFlags::EMenuEntryWrap,
-#else
+#elif defined(NURAD_R2)
   MenuType::ESub, "STRIP CC",  "CC NUMBER", &stripCC, 0, 127, MenuEntryFlags::EMenuEntryWrap,
 #endif
     [](SubMenuRef __unused, char* out, const char** __unused unit) {
@@ -1824,7 +1824,8 @@ const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&rollerMenu,
   (MenuEntry*)&pitchBendMenu
 };
-#elif defined(NUEVI_R2)
+#endif
+#if defined(NUEVI_R2)
 const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&biteCtlMenu,
   (MenuEntry*)&biteCCMenu,
@@ -1847,7 +1848,8 @@ const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&rollerMenu,
   (MenuEntry*)&pitchBendMenu
 };
-#else
+#endif
+#if defined(NUEVI_R1)
 const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&biteCtlMenu,
   (MenuEntry*)&biteCCMenu,
