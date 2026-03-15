@@ -6,13 +6,14 @@ Follow the project at https://hackaday.io/project/25756-diy-evi-style-windcontro
 
 ## Building NuEVI
 
-NuEVI is easiest to build using the Arduino IDE. You will also need to download and install
-[Teensyduino](https://www.pjrc.com/teensy/td_download.html) to build for and upload to the Teensy.
+This project is designed to be built using [PlatformIO](https://platformio.org/install/). If using the command-line tools, just build using `pio run` (or `pio run -e nuevi` for a specific build target).
+
+It can also be built using the Arduino IDE. You will also need to download and install
+[Teensyduino](https://www.pjrc.com/teensy/td_download.html) to build for and upload to the Teensy. You need to edit hardware.h to configure it for your platform.
 
 ### Libraries
 
-A few libraries need to be added that are not part of the default Arduino install. These can be
-added directly via the Library Manager in the Arduino IDE:
+A few libraries need to be added that are not part of the default Arduino install. These need to be added via the Library Manager in the Arduino IDE:
 * Adafruit MPR121 (version 1.1.1. 1.2.0 and later have compatibility issues with Teensy 3.2)
 * Adafruit GFX
 * Adafruit SSD1306 (version 1.2.9 or above)
@@ -21,8 +22,8 @@ added directly via the Library Manager in the Arduino IDE:
 
 ### Compile options
 
-Open NuEVI.ino in the Arduino IDE. Under "Tools -> Board", select "Teensy 3.2 / 3.1". Then set
-"Tools -> USB Type" to "MIDI".
+Open NuEVI.ino in the Arduino IDE. Under "Tools -> Board", select "Teensy 3.2 / 3.1" for NuEVI/NuRAD R1, or "Teensy 4.0" for NuEVI/NuRAD R2.
+Then set "Tools -> USB Type" to "MIDI".
 
 ### Building and uploading
 
