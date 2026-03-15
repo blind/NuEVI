@@ -1166,6 +1166,7 @@ const MenuEntrySub gateOpenMenu = {
   , nullptr
 };
 
+#if !defined(NURAD)
 const MenuEntrySub trill3Menu = {
   MenuType::ESub, "3RD TRILL", "3RD TRILL", &trill3_interval, 3, 4, MenuEntryFlags::ENone,
   [](SubMenuRef __unused, char* out, const char** __unused unit) {
@@ -1186,6 +1187,7 @@ const MenuEntrySub bcasModeMenu = {
   }
   , nullptr
 };
+#endif
 
 const MenuEntrySub dacModeMenu = {
   MenuType::ESub, "DAC OUT", "DAC OUT", &dacMode, 0, 1, MenuEntryFlags::ENone,
@@ -1576,6 +1578,7 @@ const MenuEntrySub leverCCMenu = {
   , nullptr
 };
 
+#if (defined(NURAD) && defined(LITE)) || defined(EVIR2)
 const MenuEntrySub stripCtlMenu = {
 #if defined(EVIR2)
   MenuType::ESub, "AUX CTL", "AUX DEST", &stripControl, 0, 2, MenuEntryFlags::EMenuEntryWrap,
@@ -1602,6 +1605,7 @@ const MenuEntrySub stripCCMenu = {
   [](const MenuEntrySub & __unused sub) { writeSetting(STRIPCC_ADDR,stripCC); }
     , nullptr
   };
+#endif
 
 const MenuEntrySub portMenu = {
   MenuType::ESub, "GLIDE MOD", "PORT/GLD", &portamento, 0, 5, MenuEntryFlags::EMenuEntryWrap,
@@ -1778,7 +1782,7 @@ const MenuEntrySub rollerMenu = {
   , nullptr
 };
 
-
+#if defined(NURAD)
 const MenuEntrySub lpinky3Menu = {
   MenuType::ESub, "EXTRA KEY", "EXTRA PKEY", &lpinky3, 0, 25, MenuEntryFlags::ENone,
   [](SubMenuRef __unused,char* textBuffer, const char** __unused unit) {
@@ -1792,6 +1796,7 @@ const MenuEntrySub lpinky3Menu = {
   [](const MenuEntrySub & __unused sub) { writeSetting(LPINKY3_ADDR,lpinky3); }
   , nullptr
 };
+#endif
 
 #if defined(NURAD)
 const MenuEntry* controlMenuEntries[] = {
