@@ -1166,17 +1166,7 @@ const MenuEntrySub gateOpenMenu = {
   , nullptr
 };
 
-const MenuEntrySub specialKeyMenu = {
-  MenuType::ESub, "SPEC KEY", "SPEC KEY", &specialKeyEnable, 0, 1, MenuEntryFlags::EMenuEntryWrap,
-  [](SubMenuRef __unused, char* out, const char ** __unused unit) {
-    strncpy(out, specialKeyEnable?"ON":"OFF", 4);
-  }, [](const MenuEntrySub & __unused sub) {
-    setBit(dipSwBits, DIPSW_SPKEYENABLE, specialKeyEnable);
-    writeSetting(DIPSW_BITS_ADDR, dipSwBits);
-  }
-  , nullptr
-};
-
+#if !defined(NURAD)
 const MenuEntrySub trill3Menu = {
   MenuType::ESub, "3RD TRILL", "3RD TRILL", &trill3_interval, 3, 4, MenuEntryFlags::ENone,
   [](SubMenuRef __unused, char* out, const char** __unused unit) {
@@ -1197,6 +1187,7 @@ const MenuEntrySub bcasModeMenu = {
   }
   , nullptr
 };
+#endif
 
 const MenuEntrySub dacModeMenu = {
   MenuType::ESub, "DAC OUT", "DAC OUT", &dacMode, 0, 1, MenuEntryFlags::ENone,
@@ -1450,30 +1441,6 @@ const MenuEntrySub breathATMenu = {
   , nullptr
 };
 
-const MenuEntrySub brHarmonicsMenu = {
-  MenuType::ESub, "BRTH HARM",  "HARM RANGE", &brHarmSetting, 0, 6, MenuEntryFlags::EMenuEntryWrap,
-  [](SubMenuRef __unused, char* out, const char** __unused unit) {
-    if(brHarmSetting) numToString(brHarmSetting, out);
-    else strncpy(out, "OFF", 4);
-  },
-[](const MenuEntrySub & __unused sub) { writeSetting(BRHARMSET_ADDR,brHarmSetting); }
-  , nullptr
-};
-
-const MenuEntrySub brHarmSelectMenu = {
-  MenuType::ESub, "BR HM SEL", "SERIES", &brHarmSelect, 0, 3, MenuEntryFlags::EMenuEntryWrap,
-  [](SubMenuRef __unused, char* out, const char** __unused unit) {
-    const char* brHarmSelectMenuLabels[] = { "HM1", "HM2", "5TH", "OCT" };
-    strncpy(out, brHarmSelectMenuLabels[brHarmSelect], 4);
-  },
-  [](const MenuEntrySub & __unused sub){
-    if (readSetting(BRHARMSEL_ADDR) != brHarmSelect) {
-      writeSetting(BRHARMSEL_ADDR,brHarmSelect);
-    }
-  }
-  , nullptr
-};
-
 const MenuEntrySub velocityMenu = {
   MenuType::ESub, "VELOCITY",  "VELOCITY", &velocity, 0, 127, MenuEntryFlags::EMenuEntryWrap,
   [](SubMenuRef __unused, char* out, const char** __unused unit) {
@@ -1547,8 +1514,6 @@ const MenuEntry* breathMenuEntries[] = {
   (MenuEntry*)&curveMenu,
   (MenuEntry*)&velSmpDlMenu,
   (MenuEntry*)&velBiasMenu,
-  //(MenuEntry*)&brHarmonicsMenu,
-  //(MenuEntry*)&brHarmSelectMenu,
   (MenuEntry*)&breathIntervalMenu
 };
 
@@ -1613,6 +1578,7 @@ const MenuEntrySub leverCCMenu = {
   , nullptr
 };
 
+#if (defined(NURAD) && defined(LITE)) || defined(EVIR2)
 const MenuEntrySub stripCtlMenu = {
 #if defined(EVIR2)
   MenuType::ESub, "AUX CTL", "AUX DEST", &stripControl, 0, 2, MenuEntryFlags::EMenuEntryWrap,
@@ -1639,6 +1605,7 @@ const MenuEntrySub stripCCMenu = {
   [](const MenuEntrySub & __unused sub) { writeSetting(STRIPCC_ADDR,stripCC); }
     , nullptr
   };
+#endif
 
 const MenuEntrySub portMenu = {
   MenuType::ESub, "GLIDE MOD", "PORT/GLD", &portamento, 0, 5, MenuEntryFlags::EMenuEntryWrap,
@@ -1690,20 +1657,6 @@ const MenuEntrySub extraMenu = {
     strncpy(out, extraMenuLabels[extraCT], 12);
   },
   [](const MenuEntrySub & __unused sub) { writeSetting(EXTRA_ADDR,extraCT); }
-  , nullptr
-};
-
-const MenuEntrySub extraSrcMenu = {
-  MenuType::ESub, "EXCT SRC", "INPUT", &extraSrc, 0,1, MenuEntryFlags::EMenuEntryWrap,
-  [](SubMenuRef __unused,char* out, const char** __unused unit) {
-    #if defined(EVIR2)
-    const char* extraSrcMenuLabels[] = { "LIP", "AUX"};
-    #else
-    const char* extraSrcMenuLabels[] = { "LIP", "GLS"};
-    #endif
-    strncpy(out, extraSrcMenuLabels[extraSrc], 12);
-  },
-  [](const MenuEntrySub & __unused sub) { writeSetting(EXTRA_SRC_ADDR,extraSrc); }
   , nullptr
 };
 
@@ -1829,7 +1782,7 @@ const MenuEntrySub rollerMenu = {
   , nullptr
 };
 
-
+#if defined(NURAD)
 const MenuEntrySub lpinky3Menu = {
   MenuType::ESub, "EXTRA KEY", "EXTRA PKEY", &lpinky3, 0, 25, MenuEntryFlags::ENone,
   [](SubMenuRef __unused,char* textBuffer, const char** __unused unit) {
@@ -1843,6 +1796,7 @@ const MenuEntrySub lpinky3Menu = {
   [](const MenuEntrySub & __unused sub) { writeSetting(LPINKY3_ADDR,lpinky3); }
   , nullptr
 };
+#endif
 
 #if defined(NURAD)
 const MenuEntry* controlMenuEntries[] = {
@@ -2000,20 +1954,6 @@ const MenuEntrySub vibSquelchBiteMenu = {
   , nullptr
 };
 
-const MenuEntrySub vibControlMenu = {
-  MenuType::ESub, "CONTROL", "CONTROL", &vibControl , 0, 2, MenuEntryFlags::EMenuEntryWrap,
-  [](SubMenuRef __unused, char* out, const char** __unused unit) {
-    if (2 == vibControl)
-      strncpy(out, "BTH", 4);
-    else if (1 == vibControl)
-      strncpy(out, "BIT", 4);
-    else
-      strncpy(out, "LVR", 4);
-  },
-  [](const MenuEntrySub & __unused sub) { writeSetting(VIB_CONTROL_ADDR,vibControl); }
-  , nullptr
-};
-
 const MenuEntrySub vibDirMenu = {
   MenuType::ESub, "DIRECTION", "DIRECTION", &vibDirection , 0, 1, MenuEntryFlags::EMenuEntryWrap,
   [](SubMenuRef __unused, char* out, const char** __unused unit) {
@@ -2027,7 +1967,6 @@ const MenuEntrySub vibDirMenu = {
 };
 
 const MenuEntry* vibratorMenuEntries[] = {
-    //(MenuEntry*)&vibControlMenu,
     (MenuEntry*)&vibDepthMenu,
     (MenuEntry*)&vibRetnMenu,
     (MenuEntry*)&vibDirMenu,
