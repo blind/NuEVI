@@ -9,16 +9,16 @@ Follow the project at https://hackaday.io/project/25756-diy-evi-style-windcontro
 This project is designed to be built using [PlatformIO](https://platformio.org/install/). If using the command-line tools, just build using `pio run` (or `pio run -e nuevi` for a specific build target).
 
 It can also be built using the Arduino IDE. You will also need to download and install
-[Teensyduino](https://www.pjrc.com/teensy/td_download.html) to build for and upload to the Teensy. You need to edit hardware.h to configure it for your platform.
+[Teensyduino](https://www.pjrc.com/teensy/td_download.html) to build for and upload to the Teensy. You need to edit [hardware.h](NuEVI/hardware.h) to configure it for your platform.
 
 ### Libraries
 
 A few libraries need to be added that are not part of the default Arduino install. These need to be added via the Library Manager in the Arduino IDE:
-* Adafruit MPR121 (version 1.1.1. 1.2.0 and later have compatibility issues with Teensy 3.2)
+* Adafruit MPR121 (version 1.1.x. 1.2.0 and later have compatibility issues with Teensy 3.2)
 * Adafruit GFX
-* Adafruit SSD1306 (version 1.2.9 or above)
+* Adafruit SSD1306
 * NuEVI also includes the [Filters](https://github.com/JonHub/Filters) library by Jonathan Driscoll, but that is no longer an external dependency.
-
+Usually the latest version will work (except MPR121), to see the exact version used check in [platformio.ini](NuEVI/platformio.ini).
 
 ### Compile options
 
