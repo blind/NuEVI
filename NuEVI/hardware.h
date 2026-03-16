@@ -2,16 +2,46 @@
 #define __HARDWARE_H
 #endif
 
-#define REVB
-//#define NURAD
-//#define SEAMUS
-//#define LITE
-//#define EVIR2
+//Platform-specific defines if using Arduino IDE.
+// Only need to set the specific variant (and SEAMUS if applicable);
+
+//#define NURAD_R1
+//#define NURAD_R2
+//#define NUEVI_R1
+//#define NUEVI_R2
+//#define SEAMUS  // only in conjunction with NURAD_R1
 
 //#define I2CSCANNER
 
-#if defined(NURAD) //NuRAD <<<<<<<<<<<<<<<<<<<<<<<
-#if defined(LITE)  //NuRAD lite
+// Implied family and generation flags — derived from the specific variant define above.
+// These do not need to be set manually or in platformio.ini.
+#if defined(NURAD_R1) || defined(NURAD_R2)
+  #define NURAD
+#endif
+#if defined(NUEVI_R1) || defined(NUEVI_R2)
+  #define NUEVI
+#endif
+#if defined(NURAD_R1) || defined(NUEVI_R1)
+  #define PLATFORM_R1
+#endif
+#if defined(NURAD_R2) || defined(NUEVI_R2)
+  #define PLATFORM_R2
+#endif
+
+//Check that exactly one of the specific variant flags is set
+#if !(defined(NURAD_R1) || defined(NURAD_R2) || defined(NUEVI_R1) || defined(NUEVI_R2))
+#error "No target specified. Please define exactly one of NURAD_R1, NURAD_R2, NUEVI_R1 or NUEVI_R2."
+#endif
+
+#if (defined(NURAD) && defined(NUEVI)) || (defined(PLATFORM_R1) && defined(PLATFORM_R2))
+#error "Multiple incompatible target flags defined. Please define exactly one of NURAD_R1, NURAD_R2, NUEVI_R1 or NUEVI_R2."
+#endif
+
+#if (defined(SEAMUS) && !defined(NURAD_R1))
+#error "SEAMUS can only be used together with NURAD_R1."
+#endif
+
+#if defined(NURAD_R2)  //NuRAD R2 <<<<<<<<<<<<<<<<<<<<<<<
 
 // Pin definitions
 
@@ -92,7 +122,9 @@
 #define LHp3Pin 4
 
 
-#else //Regular NuRAD
+#endif
+
+#if defined(NURAD_R1)  //Regular NuRAD
 // Pin definitions
 
 // Teensy pins
@@ -175,8 +207,8 @@
 #define LHp3Pin 4
 
 #endif
-#else //NuEVI <<<<<<<<<<<<<<<<<<<<<<<
-#if defined(EVIR2)  //NuEVI R2
+
+#if defined(NUEVI_R2)  //NuEVI R2 <<<<<<<<<<<<<<<<<<<<<<<
 
 //Analog pressure sensors. Breath and optional bite
 #define breathSensorPin A0
@@ -240,7 +272,9 @@
 #define patchPinEVI 6
 #define lockGlidePin 7
 
-#else
+#endif
+
+#if defined(NUEVI_R1)
 // Pin definitions
 
 // Teensy pins
@@ -295,8 +329,6 @@
 #define MIDI_SERIAL Serial3
 #define WIDI_SERIAL Serial2
 
-#if defined(REVB)
-
 // MPR121 pins Rev B (angled pins at top edge for main keys and rollers)
 
 #define R1Pin 0
@@ -322,34 +354,6 @@
  *
  */
 
-# else //REV A
 
-// MPR121 pins Rev A (upright pins below MPR121 for main keys and rollers)
-
-#define R1Pin 10
-#define R2Pin 11
-#define R3Pin 8
-#define R4Pin 9
-#define R5Pin 6
-
-#define K4Pin 7
-#define K1Pin 4
-#define K2Pin 5
-#define K3Pin 2
-#define K5Pin 3
-#define K6Pin 0
-#define K7Pin 1
-
-/*
- *    PINOUT ON PCB vs PINS ON MPR121 - Rev. A
- *
- *    (R2)  (R4)  (K4)  (K2)  (K5)  (K7)  <-> (11)  (09)  (07)  (05)  (03)  (01)
- *
- *    (R1) (R3/6) (R5)  (K1)  (K3)  (K6)  <-> (10)  (08)  (06)  (04)  (02)  (00)
- *
- */
-
-#endif //REVB
-#endif //EVIR2
-#endif //NURAD
+#endif //NUEVI_R1
 

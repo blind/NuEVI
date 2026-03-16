@@ -1166,7 +1166,7 @@ const MenuEntrySub gateOpenMenu = {
   , nullptr
 };
 
-#if !defined(NURAD)
+#if defined(NUEVI)
 const MenuEntrySub trill3Menu = {
   MenuType::ESub, "3RD TRILL", "3RD TRILL", &trill3_interval, 3, 4, MenuEntryFlags::ENone,
   [](SubMenuRef __unused, char* out, const char** __unused unit) {
@@ -1548,13 +1548,13 @@ const MenuEntrySub biteCCMenu = {
 };
 
 const MenuEntrySub leverCtlMenu = {
-#if defined(LITE) || defined(EVIR2)
+#if defined(PLATFORM_R2)
   MenuType::ESub, "PAD CTL", "PAD DEST", &leverControl, 0, 3, MenuEntryFlags::EMenuEntryWrap,
 #else
   MenuType::ESub, "LEVER CTL", "LEVER DEST", &leverControl, 0, 3, MenuEntryFlags::EMenuEntryWrap,
 #endif
   [](SubMenuRef __unused,char* out, const char ** __unused unit) {
-    #if defined(EVIR2)
+    #if defined(NUEVI_R2)
     const char* labs[] = { "OFF", "OFF", "GLD", "CC" };
     #else
     const char* labs[] = { "OFF", "VIB", "GLD", "CC" };
@@ -1566,7 +1566,7 @@ const MenuEntrySub leverCtlMenu = {
 };
 
 const MenuEntrySub leverCCMenu = {
-#if defined(LITE) || defined(EVIR2)
+#if defined(PLATFORM_R2)
   MenuType::ESub, "PAD CC",  "CC NUMBER", &leverCC, 0, 127, MenuEntryFlags::EMenuEntryWrap,
 #else
   MenuType::ESub, "LEVER CC",  "CC NUMBER", &leverCC, 0, 127, MenuEntryFlags::EMenuEntryWrap,
@@ -1578,11 +1578,11 @@ const MenuEntrySub leverCCMenu = {
   , nullptr
 };
 
-#if (defined(NURAD) && defined(LITE)) || defined(EVIR2)
+#if defined(PLATFORM_R2)
 const MenuEntrySub stripCtlMenu = {
-#if defined(EVIR2)
+#if defined(NUEVI_R2)
   MenuType::ESub, "AUX CTL", "AUX DEST", &stripControl, 0, 2, MenuEntryFlags::EMenuEntryWrap,
-#else
+#elif defined(NURAD_R2)
   MenuType::ESub, "STRIP CTL", "STRIP DEST", &stripControl, 0, 2, MenuEntryFlags::EMenuEntryWrap,
 #endif
   [](SubMenuRef __unused,char* out, const char ** __unused unit) {
@@ -1594,9 +1594,9 @@ const MenuEntrySub stripCtlMenu = {
 };
 
 const MenuEntrySub stripCCMenu = {
-#if defined(EVIR2)
+#if defined(NUEVI_R2)
     MenuType::ESub, "AUX CC",  "CC NUMBER", &stripCC, 0, 127, MenuEntryFlags::EMenuEntryWrap,
-#else
+#elif defined(NURAD_R2)
   MenuType::ESub, "STRIP CC",  "CC NUMBER", &stripCC, 0, 127, MenuEntryFlags::EMenuEntryWrap,
 #endif
     [](SubMenuRef __unused, char* out, const char** __unused unit) {
@@ -1812,7 +1812,7 @@ const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&extraCC2Menu,
   (MenuEntry*)&harmonicsMenu,
   (MenuEntry*)&harmSelectMenu,
-  #if defined(LITE)
+  #if defined(NURAD_R2)
   (MenuEntry*)&stripCtlMenu,
   (MenuEntry*)&stripCCMenu,
   #endif
@@ -1824,7 +1824,8 @@ const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&rollerMenu,
   (MenuEntry*)&pitchBendMenu
 };
-#elif defined(EVIR2)
+#endif
+#if defined(NUEVI_R2)
 const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&biteCtlMenu,
   (MenuEntry*)&biteCCMenu,
@@ -1847,7 +1848,8 @@ const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&rollerMenu,
   (MenuEntry*)&pitchBendMenu
 };
-#else
+#endif
+#if defined(NUEVI_R1)
 const MenuEntry* controlMenuEntries[] = {
   (MenuEntry*)&biteCtlMenu,
   (MenuEntry*)&biteCCMenu,
@@ -1911,7 +1913,7 @@ const MenuEntrySub vibRetnMenu = {
 };
 
 const MenuEntrySub vibSenseMenu = {
-#if defined(LITE)
+#if defined(NURAD_R2)
   MenuType::ESub, "SENSE PAD", "LEVEL", &vibSens, 1, 12, MenuEntryFlags::ENone,
 #else
   MenuType::ESub, "SENSE LVR", "LEVEL", &vibSens, 1, 12, MenuEntryFlags::ENone,
@@ -1924,7 +1926,7 @@ const MenuEntrySub vibSenseMenu = {
 };
 
 const MenuEntrySub vibSquelchMenu = {
-#if defined(LITE)
+#if defined(NURAD_R2)
   MenuType::ESub, "SQUELCH P", "LEVEL", &vibSquelch, 1, 30, MenuEntryFlags::ENone,
 #else
   MenuType::ESub, "SQUELCH L", "LEVEL", &vibSquelch, 1, 30, MenuEntryFlags::ENone,
